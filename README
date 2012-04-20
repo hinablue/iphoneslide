@@ -1,3 +1,9 @@
-###Playground
+## iPhone slide jQuery Plugin
 
-CoffeeScript.
+Rewrite with CoffeeScript and rename some functions, check origin project here [https://github.com/hinablue/jqiphoneslide](https://github.com/hinablue/jqiphoneslide).
+
+## Diff
+
+*   jqipslide2page -> slide2page
+*   jqipblank2page -> blank2page
+
