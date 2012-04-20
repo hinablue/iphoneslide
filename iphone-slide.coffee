@@ -403,7 +403,7 @@ class iphoneslide
         @workspace.delegate opts.slideHandler, "touchstart.iphoneslide MozTouchDown.iphoneslide", (event) =>
           event.preventDefault()
           @_initdrag event
-        @handler.filter(opts.slideHandler).delegate "a, button, input[type=button], input[type=reset], input[type=submit]", "touchstart.iphoneslide MozTouchDown.iphoneslide", (event) =>
+        @handler.filter(opts.slideHandler).delegate "a, button, input[type=button], input[type=reset], input[type=submit]", "touchstart.iphoneslide MozTouchDown.iphone?slide", (event) =>
           event.preventDefault()
           @_click event
 
