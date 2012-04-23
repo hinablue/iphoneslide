@@ -173,7 +173,7 @@ class iphoneslide
     e = parseInt pos
     t = parseInt timestamp
 
-    v = m.abs(s-e)/m.abs(t);
+    v = m.abs(s-e)/m.abs(t)
     ex = m.floor(m.pow(v/12, 2)*m.abs(opts.extrashift)/(2*9.80665/12*m.abs(opts.friction))*0.01)
     ex = if s>w/2 then m.floor(w/3) else s
 
