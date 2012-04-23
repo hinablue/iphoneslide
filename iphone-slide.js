@@ -24,7 +24,7 @@
 
     var defaults, m;
 
-    iphoneslide.name = 'iphoneslide';
+    var name = 'iphoneslide';
 
     function iphoneslide(options, callback, workspace) {
       this.workspace = $(workspace);
