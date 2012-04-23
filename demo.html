@@ -42,6 +42,27 @@
                 display: none;
                 cursor: pointer;
             }
+            
+            .banner_pager{
+                list-style:none;
+                width:310px;
+                display:block;
+                margin:0 auto;
+                padding:0;
+                text-align:center;
+                height:28px;
+            }
+            .banner_pager > li{
+                display:inline;
+                cursor:pointer;
+                padding:0px 2px;
+                font-size:50px;
+                line-height:28px;
+                color:#CCC;
+            }
+            .banner_pager > li.on{
+                color:#00C3FF;
+            }
         </style>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script src="./iphone-slide.js"></script>
@@ -53,13 +74,16 @@
                 <li class="page">2</li>
                 <li class="page">3</li>
                 <li class="page">4</li>
+                <li class="page">5</li>
+                <li class="page">6</li>
             </ul>
         </div>
         <script>
             $(document).ready(function() {
                 $('#album').iphoneSlide({
                     handler: '.paging',
-                    pageHandler: '.page'
+                    pageHandler: '.page',
+                    autoCreatePager:true
                 });
 
                 //console.log($('#album').data('iphoneslide'));
