@@ -115,6 +115,8 @@
 
     iphoneslide.prototype._updatepagernav = function() {
       var _this = this;
+      var opts;
+      opts = this.options;
       if (this.isPager === true) {
         return $(opts.pager.selectorName).each(function(i, e) {
           return $("li", $(e)).removeClass(_this.options.pager.childrenOnClass).eq(_this.nowPage - 1).addClass(_this.options.pager.childrenOnClass);
@@ -139,6 +141,7 @@
         default:
           pagerIndicator = "";
       }
+      var pagerLinks = '';
       for (i = _i = _ref = this.totalPages; _ref <= 1 ? _i <= 1 : _i >= 1; i = _ref <= 1 ? ++_i : --_i) {
         pagerLinks += '<li><span>' + (typeof pagerIndicator === "number" ? this.totalPages - i + 1 : pagerIndicator) + '</span></li>';
       }

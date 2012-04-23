@@ -72,6 +72,7 @@ class iphoneslide
   options: {},
 
   _updatepagernav: () ->
+    opts = @options
     if @isPager is on
       $(opts.pager.selectorName).each (i, e) =>
         $("li", $(e)).removeClass(@options.pager.childrenOnClass)
@@ -91,6 +92,7 @@ class iphoneslide
       else
         pagerIndicator = ""
 
+    pagerLinks = ''
     for i in [@totalPages..1]
       pagerLinks += '<li><span>'+(if typeof pagerIndicator is "number" then @totalPages-i+1 else pagerIndicator)+'</span></li>'
 
