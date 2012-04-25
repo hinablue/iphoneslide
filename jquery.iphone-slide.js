@@ -20,8 +20,6 @@
   $ = jQuery;
 
   iphoneslide = (function() {
-    "use strict";
-
     var defaults, m;
 
     iphoneslide.name = 'iphoneslide';

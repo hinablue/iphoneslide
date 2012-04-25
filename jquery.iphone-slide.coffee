@@ -15,8 +15,6 @@ $ = jQuery
 
 class iphoneslide
 
-  "use strict"
-
   constructor: (options, callback, workspace) ->
     @workspace = $ workspace
     @_create options, callback
