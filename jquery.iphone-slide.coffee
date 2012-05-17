@@ -298,7 +298,7 @@ class iphoneslide
           })
         when "vertical"
           @handler.css "top", @posDND.origY+@posDND.Y
-        when "herizontal"
+        when "horizontal"
           @handler.css "left", @posDND.origX+@posDND.X
 
     if @isTouch is yes

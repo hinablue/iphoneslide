@@ -390,7 +390,7 @@
           case "vertical":
             this.handler.css("top", this.posDND.origY + this.posDND.Y);
             break;
-          case "herizontal":
+          case "horizontal":
             this.handler.css("left", this.posDND.origX + this.posDND.X);
         }
       }
