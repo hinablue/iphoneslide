@@ -631,7 +631,8 @@ class iphoneslide
 
   reset: () ->
     @_setBoundry()
-
+    animate = @_slidetopage @fakePage
+    @handler.css animate.after
     return @
 
   complete: () ->
@@ -641,7 +642,7 @@ class iphoneslide
       pageElem = @pagesHandler.eq(@fakePage-1)
       opts.onShiftComplete.apply @, [@pageElem, parseInt(pageElem.data('realPageNo'), 10)]
 
-    if opts.autoPlay is on and @autoPlayerTimer is null and @cancelAutoPlayOnResize is off
+    if opts.autoPlay is on and @autoPlayerTimer is null and opts.cancelAutoPlayOnResize is off
       @autoPlayerTimer = setInterval () =>
         if @fakePage isnt @totalPages
           @slide2page "next"

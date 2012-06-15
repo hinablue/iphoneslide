@@ -760,7 +760,10 @@
     };
 
     iphoneslide.prototype.reset = function() {
+      var animate;
       this._setBoundry();
+      animate = this._slidetopage(this.fakePage);
+      this.handler.css(animate.after);
       return this;
     };
 
@@ -772,7 +775,7 @@
         pageElem = this.pagesHandler.eq(this.fakePage - 1);
         opts.onShiftComplete.apply(this, [this.pageElem, parseInt(pageElem.data('realPageNo'), 10)]);
       }
-      if (opts.autoPlay === true && this.autoPlayerTimer === null && this.cancelAutoPlayOnResize === false) {
+      if (opts.autoPlay === true && this.autoPlayerTimer === null && opts.cancelAutoPlayOnResize === false) {
         this.autoPlayerTimer = setInterval(function() {
           if (_this.fakePage !== _this.totalPages) {
             return _this.slide2page("next");
