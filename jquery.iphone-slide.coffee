@@ -37,7 +37,7 @@ class iphoneslide
     bounce: true,
     pageshowfilter : false,
     autoPlay: false,
-    cancelAutoPlayOnResize: true,
+    cancelAutoPlayOnResize: false,
     autoCreatePager: false,
     pager:
       pagerType: 'dot',
@@ -58,6 +58,7 @@ class iphoneslide
   maxWidthPage: 0,
   maxHeightPage: 0,
   nowPage: 1,
+  fakePage: 1,
   initiPhoneSlide: no,
   autoPlayerTimer: null,
   isTouch: no,
@@ -69,14 +70,14 @@ class iphoneslide
   boundry: {top:0, left:0, right:0, bottom:0},
   options: {},
 
-  _updatepagernav: () ->
+  _updatepagernav: ->
     opts = @options
     if @isPager is on
       $(opts.pager.selectorName).each (i, e) =>
         $("li", $(e)).removeClass(@options.pager.childrenOnClass)
-        .eq(@nowPage-1).addClass(@options.pager.childrenOnClass)
+        .eq(@fakePage-1).addClass(@options.pager.childrenOnClass)
 
-  _createpager: () ->
+  _createpager: ->
     instance = @
     opts = @options
 
@@ -106,15 +107,19 @@ class iphoneslide
 
     $(pagerHtml).delegate("li", "click.iphoneslidepager", (event) ->
       event.preventDefault()
-      clearInterval instance.autoPlayerTimer if instance.autoPlayerTimer
+      if instance.autoPlayerTimer isnt null
+        clearInterval instance.autoPlayerTimer
+        instance.autoPlayerTimer = null
       instance.slide2page $(@).index()+1, opts.pager.slideToAnimated
     )
 
     if opts.autoPlay is on
-      clearInterval @autoPlayerTimer if @autoPlayerTimer
+      if @autoPlayerTimer isnt null
+        clearInterval @autoPlayerTimer
+        @autoPlayerTimer = null
 
       @autoPlayerTimer = setInterval () ->
-        if instance.nowPage isnt instance.totalPages
+        if instance.fakePage isnt instance.totalPages
           instance.slide2page "next"
         else
           instance.slide2page 1
@@ -133,7 +138,7 @@ class iphoneslide
     animate = {before:{}, after:{}}
     outerWidthBoundary = @workspace.width()
     outerHeightBoundary = @workspace.height()
-    nowPageElem = @pagesHandler.eq @nowPage-1
+    nowPageElem = @pagesHandler.eq @fakePage-1
 
     shift.X = nowPageElem.position().left
     shift.X -= (outerWidthBoundary - nowPageElem.outerWidth(true))/2
@@ -211,7 +216,7 @@ class iphoneslide
     if m.max(m.abs(@initDND.origX-stopEvent.pageX),m.abs(@initDND.origY-stopEvent.pageY)) >= parseInt(opts.sensitivity)
       timestamp = m.abs(stopEvent.timeStamp - @initDND.timestamp)
       bounce = {width: @workspace.outerWidth(), height: @workspace.outerHeight()}
-      thisPage = @pagesHandler.eq @nowPage-1
+      thisPage = @pagesHandler.eq @fakePage-1
       thisPageSize = {width: thisPage.outerWidth(true), height: thisPage.outerHeight(true)}
       thisMove = {
         X: @_getmovingdata(stopEvent.pageX, @initDND.origX, timestamp),
@@ -230,26 +235,26 @@ class iphoneslide
 
       switch opts.direction
         when "matrix"
-          pageColumn = m.ceil(@nowPage/@matrixRow)
-          pages.X = if pages.X>@matrixRow then @matrixRow else if m.abs(@posDND.X) < thisPageSize.width*opts.draglaunch then (if m.floor(m.abs(easing.Y/easing.X))>2 then 0 else pages.X) else (if easing.X>0 then m.min(pages.X, @nowPage-@matrixRow*(pageColumn-1)) else m.min(pages.X, @matrixRow*pageColumn-@nowPage))
-          pages.Y = if pages.Y>@matrixColumn then @matrixColumn else if m.abs(@posDND.Y) < thisPageSize.height*opts.draglaunch then (if m.floor(m.abs(easing.X/easing.Y))>2 then 0 else pages.Y) else (if easing.Y>0 then m.min(pages.Y, pageColumn-1) else if @matrixRow*pages.Y+@nowPage>@totalPages then @matrixColumn-pageColumn else pages.Y)
+          pageColumn = m.ceil(@fakePage/@matrixRow)
+          pages.X = if pages.X>@matrixRow then @matrixRow else if m.abs(@posDND.X) < thisPageSize.width*opts.draglaunch then (if m.floor(m.abs(easing.Y/easing.X))>2 then 0 else pages.X) else (if easing.X>0 then m.min(pages.X, @fakePage-@matrixRow*(pageColumn-1)) else m.min(pages.X, @matrixRow*pageColumn-@fakePage))
+          pages.Y = if pages.Y>@matrixColumn then @matrixColumn else if m.abs(@posDND.Y) < thisPageSize.height*opts.draglaunch then (if m.floor(m.abs(easing.X/easing.Y))>2 then 0 else pages.Y) else (if easing.Y>0 then m.min(pages.Y, pageColumn-1) else if @matrixRow*pages.Y+@fakePage>@totalPages then @matrixColumn-pageColumn else pages.Y)
 
-          @nowPage = if easing.X>0 then (if @nowPage-pages.X<1 then 1 else @nowPage-pages.X) else (if @nowPage+pages.X>@totalPages then @totalPages else @nowPage+pages.X)
-          @nowPage = if easing.Y>0 then (if @nowPage-pages.Y*@matrixRow<1 then 1 else @nowPage-pages.Y*@matrixRow) else (if pages.Y*@matrixRow>@totalPages then @totalPages else @nowPage+pages.Y*@matrixRow)
+          @fakePage = if easing.X>0 then (if @fakePage-pages.X<1 then 1 else @fakePage-pages.X) else (if @fakePage+pages.X>@totalPages then @totalPages else @fakePage+pages.X)
+          @fakePage = if easing.Y>0 then (if @fakePage-pages.Y*@matrixRow<1 then 1 else @fakePage-pages.Y*@matrixRow) else (if pages.Y*@matrixRow>@totalPages then @totalPages else @fakePage+pages.Y*@matrixRow)
 
         when "vertical"
           pages.X = 0
-          pages.Y = if pages.Y is 0 then 1 else if pages.Y > opts.maxShiftPage then opts.maxShiftPage else (if easing.Y>0 then (if @nowPage-pages.Y<1 then @nowPage-1 else pages.Y) else (if @nowPage+pages.Y>@totalPages then @totalPages - @nowPage else pages.Y))
+          pages.Y = if pages.Y is 0 then 1 else if pages.Y > opts.maxShiftPage then opts.maxShiftPage else (if easing.Y>0 then (if @fakePage-pages.Y<1 then @fakePage-1 else pages.Y) else (if @fakePage+pages.Y>@totalPages then @totalPages - @fakePage else pages.Y))
 
-          @nowPage = if easing.Y>0 then (if @nowPage-pages.Y<1 then 1 else @nowPage-pages.Y) else (if @nowPage+pages.Y>@totalPages then @totalPages else @nowPage+pages.Y)
+          @fakePage = if easing.Y>0 then (if @fakePage-pages.Y<1 then 1 else @fakePage-pages.Y) else (if @fakePage+pages.Y>@totalPages then @totalPages else @fakePage+pages.Y)
 
         when "horizontal"
           pages.Y = 0
-          pages.X = if pages.X is 0 then 1 else if pages.X>opts.maxShiftPage then opts.maxShiftPage else (if easing.X>0 then (if @nowPage-pages.X<1 then @nowPage-1 else pages.X) else (if @nowPage+pages.X>@totalPages then @totalPages-@nowPage else pages.X))
+          pages.X = if pages.X is 0 then 1 else if pages.X>opts.maxShiftPage then opts.maxShiftPage else (if easing.X>0 then (if @fakePage-pages.X<1 then @fakePage-1 else pages.X) else (if @fakePage+pages.X>@totalPages then @totalPages-@fakePage else pages.X))
 
-          @nowPage = if easing.X>0 then (if @nowPage-pages.X<1 then 1 else @nowPage-pages.X) else (if @nowPage+pages.X>@totalPages then @totalPages else @nowPage+pages.X)
+          @fakePage = if easing.X>0 then (if @fakePage-pages.X<1 then 1 else @fakePage-pages.X) else (if @fakePage+pages.X>@totalPages then @totalPages else @fakePage+pages.X)
 
-      @nowPage = if @nowPage >= @totalPages then @totalPages else @nowPage
+      @fakePage = if @fakePage >= @totalPages then @totalPages else @fakePage
 
       animate = if opts.bounce is on then @_slidetopage easing else @_slidetopage 0
 
@@ -312,7 +317,10 @@ class iphoneslide
   _initdrag: (event) ->
     opts = @options
 
-    clearInterval @autoPlayerTimer if @autoPlayerTimer isnt null
+    if @autoPlayerTimer isnt null
+      clearInterval @autoPlayerTimer
+      @autoPlayerTimer = null
+
     return off if @isStartDrag is on
 
     if @isTouch is yes
@@ -374,7 +382,7 @@ class iphoneslide
     return @ if not @_init options
 
     opts = @options
-    @nowPage = 1
+    @fakePage = 1
 
     if not @isTouch
       if opts.slideHandler is null or typeof opts.slideHandler isnt "string"
@@ -410,14 +418,16 @@ class iphoneslide
     @_createpager() if opts.autoCreatePager is on and not @isPager
 
     $(window).resize () =>
-      clearInterval @autoPlayerTimer if @autoPlayerTimer and opts.cancelAutoPlayOnResize
+      if @autoPlayerTimer isnt null and opts.cancelAutoPlayOnResize
+        clearInterval @autoPlayerTimer
+        @autoPlayerTimer = null
       @reset()
 
     callback.call(@) if $.isFunction callback is on
 
   _init: (options) ->
     opts = @options = $.extend({}, defaults, options)
-    tmpPage = @nowPage or 1
+    tmpPage = @fakePage or 1
 
     if opts.handler is null or typeof opts.handler isnt "string"
       opts.handler = ".iphone-slide-page-handler"
@@ -441,10 +451,13 @@ class iphoneslide
     else
       @pagesHandler = @handler.children(opts.pageHandler).filter(':visible')
 
+    @pagesHandler.each ()->
+      $(@).data 'realPageNo', $(@).index() + 1
+
     @totalPages = @pagesHandler.length
     @_setBoundry()
-    @nowPage = 0
-    @slide2page tmpPage
+    @fakePage = 0
+    @slide2page tmpPage, false, false
     @pagesHandler.css 'display', 'block'
 
     return @
@@ -475,7 +488,7 @@ class iphoneslide
             if _h < maxPageSize.height
               elem.css {
                 'margin-top': (maxPageSize.height - _h)/2,
-                'margin-bottom': (maxPageSize.height -_h)/2
+                'margin-bottom': (maxPageSize.height - _h)/2
               }
 
             elem = null
@@ -566,26 +579,27 @@ class iphoneslide
     opts = @options
     page or= 1
     effect = if typeof effect is "boolean" then effect else true
+    callCompleted = if typeof arguments[2] is "boolean" then arguments[2] else true
 
     if typeof page is "string"
       switch page
         when "prev"
-          page = @nowPage-1
+          page = @fakePage-1
         when "next"
-          page = @nowPage+1
+          page = @fakePage+1
 
-    return off if page <=0 or page > @totalPages or page is @nowPage
+    return off if page <=0 or page > @totalPages or page is @fakePage
 
-    @nowPage = page
+    @fakePage = page
 
     animate = @_slidetopage page
 
     if effect is on
       @handler.animate animate.after, 300, (if typeof $.easing[opts.easing] isnt "undefined" then opts.easing else "swing"), () =>
-        @complete()
+        @complete() if callCompleted is on
     else
       @handler.css animate.after
-      @complete()
+      @complete() if callCompleted is on
 
     return @
 
@@ -606,12 +620,12 @@ class iphoneslide
 
     if content.length > 0
       firstElem = @pagesHandler.eq 0
-      @nowPage = if jump2page is yes then @totalPages+1 else @nowPage
+      @fakePage = if jump2page is yes then @totalPages+1 else @fakePage
 
       $.each content, (index, html) =>
         firstElem.clone().removeAttr('style').html(html).appendTo(@handler)
         if index is content.length-1
-          @_init(opts).slide2page @nowPage
+          @_init(opts).slide2page @fakePage
 
     return @
 
@@ -623,9 +637,17 @@ class iphoneslide
   complete: () ->
     opts = @options
 
-    return no if typeof opts.onShiftComplete isnt "function"
+    if typeof opts.onShiftComplete is "function"
+      pageElem = @pagesHandler.eq(@fakePage-1)
+      opts.onShiftComplete.apply @, [@pageElem, parseInt(pageElem.data('realPageNo'), 10)]
 
-    opts.onShiftComplete.apply @, [@pagesHandler.eq(@nowPage-1), @nowPage]
+    if opts.autoPlay is on and @autoPlayerTimer is null and @cancelAutoPlayOnResize is off
+      @autoPlayerTimer = setInterval () =>
+        if @fakePage isnt @totalPages
+          @slide2page "next"
+        else
+          @slide2page 1
+      , opts.autoPlayTime
 
     return @
 
