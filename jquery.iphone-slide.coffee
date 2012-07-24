@@ -306,10 +306,6 @@ class iphoneslide
         when "horizontal"
           @handler.css "left", @posDND.origX+@posDND.X
 
-    if @isTouch is yes
-      if @boundry.top > moveEvent.pageY or @boundry.left > moveEvent.pageX or @boundry.right < moveEvent.pageX or @boundry.bottom < moveEvent.pageY
-        @_stopdrag event
-
     moveEvent = null
 
     return @isStartDrag
@@ -492,8 +488,7 @@ class iphoneslide
               }
 
             elem = null
-        else
-          @pagesHandler.width(maxPageSize.width).height(maxPageSize.height)
+        @pagesHandler.width(maxPageSize.width).height(maxPageSize.height)
 
         for i in [@matrixColumn..1]
           $('<br class="matrix-break-point" style="clear:both;">').insertAfter @pagesHandler.eq((i-1)*@matrixRow-1)
@@ -515,9 +510,8 @@ class iphoneslide
               elem.css 'margin-left', (maxPageSize - _w)/2
 
             elem = null
-        else
-          @pagesOuterHeight = @pagesHandler.size() * maxPageSize.height
-          @pagesHandler.width(maxPageSize.width).height(maxPageSize.height)
+        @pagesOuterHeight = @pagesHandler.size() * maxPageSize.height
+        @pagesHandler.width(maxPageSize.width).height(maxPageSize.height)
 
         @handler.height(@pagesOuterHeight).width(@pagesOuterWidth)
         .css('top', (maxPageSize.height-@pagesHandler.eq(0).outerHeight(true))/2)
@@ -539,9 +533,8 @@ class iphoneslide
               elem.css 'margin-top', (maxPageSize.height - _h)/2
 
             elem = null
-        else
-          @pagesOuterWidth = @pagesHandler.size() * maxPageSize.width
-          @pagesHandler.width(maxPageSize.width).height(maxPageSize.height)
+        @pagesOuterWidth = @pagesHandler.size() * maxPageSize.width
+        @pagesHandler.width(maxPageSize.width).height(maxPageSize.height)
 
         @handler.width(@pagesOuterWidth).height(@pagesOuterHeight)
         .css('left', (maxPageSize.width-@pagesHandler.eq(0).outerWidth(true))/2)

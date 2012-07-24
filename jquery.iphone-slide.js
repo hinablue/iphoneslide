@@ -396,11 +396,6 @@
             this.handler.css("left", this.posDND.origX + this.posDND.X);
         }
       }
-      if (this.isTouch === true) {
-        if (this.boundry.top > moveEvent.pageY || this.boundry.left > moveEvent.pageX || this.boundry.right < moveEvent.pageX || this.boundry.bottom < moveEvent.pageY) {
-          this._stopdrag(event);
-        }
-      }
       moveEvent = null;
       return this.isStartDrag;
     };
@@ -605,9 +600,8 @@
               }
               return elem = null;
             });
-          } else {
-            this.pagesHandler.width(maxPageSize.width).height(maxPageSize.height);
           }
+          this.pagesHandler.width(maxPageSize.width).height(maxPageSize.height);
           for (i = _i = _ref = this.matrixColumn; _ref <= 1 ? _i <= 1 : _i >= 1; i = _ref <= 1 ? ++_i : --_i) {
             $('<br class="matrix-break-point" style="clear:both;">').insertAfter(this.pagesHandler.eq((i - 1) * this.matrixRow - 1));
           }
@@ -627,10 +621,9 @@
               }
               return elem = null;
             });
-          } else {
-            this.pagesOuterHeight = this.pagesHandler.size() * maxPageSize.height;
-            this.pagesHandler.width(maxPageSize.width).height(maxPageSize.height);
           }
+          this.pagesOuterHeight = this.pagesHandler.size() * maxPageSize.height;
+          this.pagesHandler.width(maxPageSize.width).height(maxPageSize.height);
           this.handler.height(this.pagesOuterHeight).width(this.pagesOuterWidth).css('top', (maxPageSize.height - this.pagesHandler.eq(0).outerHeight(true)) / 2);
           this.workspace.width(maxPageSize.width);
           break;
@@ -648,10 +641,9 @@
               }
               return elem = null;
             });
-          } else {
-            this.pagesOuterWidth = this.pagesHandler.size() * maxPageSize.width;
-            this.pagesHandler.width(maxPageSize.width).height(maxPageSize.height);
           }
+          this.pagesOuterWidth = this.pagesHandler.size() * maxPageSize.width;
+          this.pagesHandler.width(maxPageSize.width).height(maxPageSize.height);
           this.handler.width(this.pagesOuterWidth).height(this.pagesOuterHeight).css('left', (maxPageSize.width - this.pagesHandler.eq(0).outerWidth(true)) / 2);
           this.workspace.height(maxPageSize.height);
       }
