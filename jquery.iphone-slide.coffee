@@ -1,6 +1,6 @@
 ###
 // iphoneSlide - jQuery plugin
-// @version: 0.8 (2012/03/03)
+// @version: 0.9 (2013/10/28)
 // @requires jQuery v1.4.3+
 // @author Hina, Cain Chen. hinablue [at] gmail [dot] com
 // @modified by: Adam Chow adamchow2326@yahoo.com.au
@@ -422,7 +422,9 @@ class iphoneslide
     callback.call(@) if $.isFunction callback is on
 
   _init: (options) ->
+    opts_pager = $.extend {}, defaults.pager, options.pager if typeof options.pager is "object"
     opts = @options = $.extend({}, defaults, options)
+    opts.pager = @options.pager = opts_pager
     tmpPage = @fakePage or 1
 
     if opts.handler is null or typeof opts.handler isnt "string"
@@ -633,7 +635,7 @@ class iphoneslide
 
     if typeof opts.onShiftComplete is "function"
       pageElem = @pagesHandler.eq(@fakePage-1)
-      opts.onShiftComplete.apply @, [@pageElem, parseInt(pageElem.data('realPageNo'), 10)]
+      opts.onShiftComplete.apply @, [pageElem, parseInt(pageElem.data('realPageNo'), 10)]
 
     if opts.autoPlay is on and @autoPlayerTimer is null and opts.cancelAutoPlayOnResize is off
       @autoPlayerTimer = setInterval () =>

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title></title>
         <style>
-            #album {
+            #album, #album2 {
                 position: relative;
                 width: 450px;
                 height: 450px;
@@ -13,7 +13,7 @@
                 border: 2px solid #ffffff;
                 background-color: #000000;
             }
-            #album ul li {
+            #album ul li, #album2 ul li {
                 display: block;
             }
 
@@ -65,7 +65,7 @@
             }
         </style>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script src="./iphone-slide.js"></script>
+        <script src="./jquery.iphone-slide.js"></script>
     </head>
     <body>
         <div id="album">
@@ -78,12 +78,36 @@
                 <li class="page">6</li>
             </ul>
         </div>
+
+        <div id="album2">
+            <ul class="paging">
+                <li class="page">1</li>
+                <li class="page">2</li>
+                <li class="page">3</li>
+                <li class="page">4</li>
+                <li class="page">5</li>
+                <li class="page">6</li>
+            </ul>
+        </div>
+
         <script>
             $(document).ready(function() {
                 $('#album').iphoneSlide({
                     handler: '.paging',
                     pageHandler: '.page',
-                    autoCreatePager:true
+                    autoCreatePager: true
+                });
+
+                //console.log($('#album').data('iphoneslide'));
+
+            });
+
+            $(document).ready(function() {
+                $('#album2').iphoneSlide({
+                    handler: '.paging',
+                    pageHandler: '.page',
+                    direction: 'vertical',
+                    autoCreatePager:false
                 });
 
                 //console.log($('#album').data('iphoneslide'));
